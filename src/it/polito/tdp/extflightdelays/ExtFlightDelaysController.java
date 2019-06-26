@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.extflightdelays.model.Model;
+import it.polito.tdp.extflightdelays.model.StatoPeso;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -47,21 +48,49 @@ public class ExtFlightDelaysController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	this.txtResult.clear();
+    	
+    	this.model.creaGrafo();
+    	
+    	this.txtResult.appendText("GRAFO CREATO!\n");
+    	this.txtResult.appendText("#VERTICI: "+this.model.getGrafo().vertexSet().size()+"\n");
+    	this.txtResult.appendText("#ARCHI: "+this.model.getGrafo().edgeSet().size()+"\n");
 
     }
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	
     }
 
     @FXML
     void doVisualizzaVelivoli(ActionEvent event) {
+    	this.txtResult.clear();
+    	
+    	String stato= null;
+    	try {
+    		stato= this.cmbBoxStati.getValue();
+    	}catch(NullPointerException e) {
+    		this.txtResult.appendText("Selezionare uno stato dal menù a tendina\n");
+    	}
+    	
+    	if(stato!=null) {
+    		if(this.model.getListStatoPeso(stato)!=null) {
+    			
+    		this.txtResult.appendText("Veivoli per lo stato "+stato+": \n");
+    		
+    		for(StatoPeso sp: this.model.getListStatoPeso(stato)) {
+    			this.txtResult.appendText(sp.toString()+"\n");
+    		}
+    		
+    	  }
+       }
 
     }
     
     public void setModel(Model model) {
 		this.model = model;	
+    	this.cmbBoxStati.getItems().addAll(this.model.getListStati());
 	}
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
